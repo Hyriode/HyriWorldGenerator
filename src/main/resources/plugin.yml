@@ -1,0 +1,5 @@
+name: HyriWorldGenerator
+main: fr.hyriode.generator.WorldGenerator
+version: @version@
+depend: [Hyrame]
+authors: [AstFaster]
