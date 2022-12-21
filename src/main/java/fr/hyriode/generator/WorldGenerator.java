@@ -26,8 +26,6 @@ public class WorldGenerator extends JavaPlugin implements IPluginProvider {
 
         System.out.println("Starting WorldGenerator...");
 
-        HyriAPI.get().getServer().getData().addObject(IWorldGenerationAPI.DATA_KEY, new WorldGenerationData(WorldGenerationType.THE_RUNNER, 3));
-
         final WorldGenerationData data = HyriAPI.get().getWorldGenerationAPI().getData();
 
         if (data == null) {
