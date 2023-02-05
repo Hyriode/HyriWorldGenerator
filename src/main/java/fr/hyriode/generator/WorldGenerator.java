@@ -46,7 +46,7 @@ public class WorldGenerator extends JavaPlugin implements IPluginProvider {
         handler.handle(data).whenComplete((unused, throwable) -> {
             // All worlds have been generated, so, we stop the server
             System.out.println("Finished to generate worlds (" + data.getWorlds() + ").");
-            Bukkit.shutdown();
+            HyriAPI.get().getServerManager().removeServer(HyriAPI.get().getServer().getName(), null);
         });
     }
 
