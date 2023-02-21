@@ -31,7 +31,7 @@ public interface WorldTypeHandler {
         final String worldName = WorldGenerator.randomName();
 
         this.generateWorld(worldName).whenComplete((world, throwable) -> Bukkit.getScheduler().runTaskLater(WorldGenerator.get(), () -> {
-            HyriAPI.get().getWorldGenerationAPI().addWorld(world.getUID(), WorldGenerationType.THE_RUNNER, worldName); // Upload the world
+            HyriAPI.get().getWorldGenerationAPI().addWorld(world.getUID(), data.getType(), worldName); // Upload the world
 
             System.out.println(generatedWorlds.incrementAndGet() + "/" + data.getWorlds() + " worlds generated.");
 
