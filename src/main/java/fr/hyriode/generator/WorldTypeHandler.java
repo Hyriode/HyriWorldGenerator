@@ -4,6 +4,7 @@ import fr.hyriode.api.HyriAPI;
 import fr.hyriode.api.world.generation.WorldGenerationData;
 import fr.hyriode.api.world.generation.WorldGenerationType;
 import fr.hyriode.generator.WorldGenerator;
+import fr.hyriode.hyrame.world.generator.HyriWorldGenerator;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
