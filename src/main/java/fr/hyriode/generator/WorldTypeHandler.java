@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,17 +32,30 @@ public interface WorldTypeHandler {
     default void process(WorldGenerationData data, AtomicInteger generatedWorlds, CompletableFuture<Void> result) {
         final String worldName = WorldGenerator.randomName();
 
-        this.generateWorld(worldName).whenComplete((world, throwable) -> Bukkit.getScheduler().runTaskLater(WorldGenerator.get(), () -> {
-            HyriAPI.get().getWorldGenerationAPI().addWorld(world.getUID(), data.getType(), worldName); // Upload the world
+        this.generateWorld(worldName).whenComplete((world, throwable) -> {
+            final File worldFolder = world.getWorldFolder();
 
-            System.out.println(generatedWorlds.incrementAndGet() + "/" + data.getWorlds() + " worlds generated.");
+            Bukkit.getScheduler().runTaskLater(WorldGenerator.get(), () -> {
+                Bukkit.unloadWorld(worldName, true);
+            }, 5 * 20L);
 
-            if (generatedWorlds.get() < data.getWorlds()) { // Are there more worlds to generate ?
-                this.process(data, generatedWorlds, result);
-            } else {
-                result.complete(null);
-            }
-        }, 5 * 20L));
+            Bukkit.getScheduler().runTaskLater(WorldGenerator.get(), () -> {
+                HyriAPI.get().getWorldManager().newWorld()
+                        .withName(worldName)
+                        .withDatabase("world-generation")
+                        .withCategory(data.getType().name())
+                        .build().save(worldFolder);
+//                HyriAPI.get().getWorldGenerationAPI().addWorld(world.getUID(), data.getType(), worldName); // Upload the world
+
+                System.out.println(generatedWorlds.incrementAndGet() + "/" + data.getWorlds() + " worlds generated.");
+
+                if (generatedWorlds.get() < data.getWorlds()) { // Are there more worlds to generate ?
+                    this.process(data, generatedWorlds, result);
+                } else {
+                    result.complete(null);
+                }
+            }, 10 * 20L);
+        });
     }
 
     CompletableFuture<World> generateWorld(String name);
